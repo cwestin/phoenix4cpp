@@ -1,8 +1,17 @@
 #!/usr/bin/python
-# Copyright (c) 2011 by Chris Westin.  All Rights Reserved.
-# See LICENSE.txt
+# Copyright (c) 2011 by Chris Westin.  See LICENSE.txt.
+# phoenix4cpp - https://github.com/cwestin/phoenix4cpp
+#
+# This script generates a makefile for the library.  It assumes a particular
+# set of directories that are part of the library, but addresses them
+# relatively (or uses os.getcwd()) so that the library directory can be
+# put anywhere.
+#
+# To use, cd to the containing directory, and issue "./makemake", followed by
+# "make"
 
 import os
+import os.path
 import re
 
 # keep around some compiled regular expressions we're use repeatedly
@@ -33,13 +42,20 @@ def writeobjdeps(makefilefd, filebase):
 
     # end the dependency list
     makefilefd.write('\n')
+    srcfd.close()
 
     # write the rule
     makefilefd.write('\t$(CC) $(CFLAGS) -c -o %s %s\n' % (objname, srcname))
-    makefilefd.write('\t$(AR) $(ARFLAGS) lib/$(LIBRARY) $<\n')
+    makefilefd.write('\t$(AR) $(ARFLAGS) lib/$(LIBRARY) %s\n' % objname)
     makefilefd.write('\n')
 
-    srcfd.close()
+    # the test file depends on the test source file and library
+    testsrc = 'testsrc/test%s.cpp' % filebase
+    if (os.path.isfile(testsrc)):
+        makefilefd.write('test/test%s:\ttestsrc/test%s.cpp lib/$(LIBRARY)\n' %
+                         (filebase, filebase))
+        makefilefd.write('\t$(CC) $(CFLAGS) -o $@ testsrc/test%s.cpp -Wl,-l:lib/$(LIBRARY)\n' % filebase)
+        makefilefd.write('\n')
 
 
 def visitsrcdir(makefilefd):
@@ -67,20 +83,51 @@ def visitsrcdir(makefilefd):
         makefilefd.write(' obj/%s.o' % filebase)
 
     # end the OBJECTS list
-    makefilefd.write('\n\n')
+    makefilefd.write('\n')
+
+    makefilefd.write('\n')
 
     # the rule to build the library
-    makefilefd.write('lib/phoenix4cpp.a:\t$(OBJECTS)\n')
+    makefilefd.write('lib/$(LIBRARY):\t$(OBJECTS)\n')
     makefilefd.write('\n')
 
     # clean
+    makefilefd.write('.PHONY:\tclean\n')
+    makefilefd.write('\n')
     makefilefd.write('clean:\n')
-    makefilefd.write('\trm src/*~ obj/*.o lib/*.a\n')
+    makefilefd.write('\trm *~ src/*~ testsrc/*~ obj/*.o lib/*.a test/*\n')
     makefilefd.write('\n')
 
     # add the individual files' dependencies
+    makefilefd.write('\n')
     for srcbase in filebases:
         writeobjdeps(makefilefd, srcbase)
+
+    # tests
+    testcounter = 0
+    makefilefd.write('TESTS =')
+    for srcbase in filebases:
+        if (os.path.isfile('testsrc/test%s.cpp' % srcbase)):
+            makefilefd.write(' test/test%s\n' % srcbase)
+            testcounter = testcounter + 1
+    makefilefd.write('\n')
+    makefilefd.write('\n')
+
+    if (testcounter > 0):
+        makefilefd.write('.PHONY:\ttests\n')
+        makefilefd.write('\n')
+        makefilefd.write('tests:\t$(TESTS)\n')
+        makefilefd.write('\n')
+
+        makefilefd.write('.PHONY:\ttestall\n')
+        makefilefd.write('\n')
+        makefilefd.write('testall:\ttests\n')
+        for srcbase in filebases:
+            if (not os.path.isfile('testsrc/test%s.cpp' % srcbase)):
+                continue
+            makefilefd.write('\ttest/test%s\n' % srcbase)
+            makefilefd.write('\n')
+
 
 
 if __name__ == '__main__':

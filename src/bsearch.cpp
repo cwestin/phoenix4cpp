@@ -1,4 +1,18 @@
+/* Copyright (c) 2011 Chris Westin.  All Rights Reserved. */
 /*
+  NAME
+    bsearch.cpp - see ../include/bsearch.h
+
+  SOURCE
+    phoenix4cpp - https://github.com/cwestin/phoenix4cpp
+
+  LICENSE
+    See ../LICENSE.txt.
+
+  IMPLEMENTATION
+    Classic binary search, with the minor optimization that we take advantage
+    of the three-valued return from the comparison function, and stop
+    immediately if we get back a zero.
  */
 
 #include "bsearch.h"
@@ -6,15 +20,8 @@
 namespace phoenix4cpp
 {
 
-void *bsearch(
-    const void *pkey,       /* pointer to key itself */
-    const void *pbase,      /* pointer to base of array */
-    size_t n,               /* number of items in array */
-    size_t size,            /* size of one array element */
-    size_t keyoffset,       /* offset of the key within an array element */
-    int (*cmp)(const void *pk, const void *pd)
-                            /* comparison routine */
-    )
+void *bsearch(const void *pkey, const void *pbase, size_t n, size_t size,      
+	      size_t keyoffset, int (*cmp)(const void *pl, const void *pr))
 {
     size_t mid;       /* the middle array element's index */
     const char *pmid; /* a pointer to the middle array element */
