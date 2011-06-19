@@ -17,6 +17,8 @@
 
 #include <cstddef>
 
+#include "compare.h"
+
 namespace phoenix4cpp
 {
 
@@ -67,7 +69,8 @@ void qsort(void *pArray, size_t n, size_t size, size_t keyOffset,
     otherwise
 */
 template<class T, class K, size_t keyOffset>
-void qsort(T *pArray, size_t n, int (*cmp)(const K *pl, const K *pr));
+void qsort(T *pArray, size_t n,
+	   int (*cmp)(const K *pl, const K *pr) = compare<K>);
 
 } // namespace phoenix4cpp
 

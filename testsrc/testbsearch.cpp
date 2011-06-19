@@ -56,10 +56,15 @@ static bool testOnce()
     {
 	const Foo *pFound =
 	    bsearch<Foo, int, offsetof(Foo, value)>(&(a[i].value), a,
-						    n, compareInt);
+						    n, compare<int>);
 	if (!pFound)
 	    return false;
 	if (pFound->value != a[i].value)
+	    return false;
+
+	const Foo *pFound2 =
+	    bsearch<Foo, int, offsetof(Foo, value)>(&(a[i].value), a, n);
+	if (pFound2 != pFound)
 	    return false;
     }
 
@@ -92,6 +97,27 @@ int main()
 	    exit(1);
 	}
     }
+
+    /*
+      Some type-matching compilation tests.  If the above passed, we
+      assume the algorithm works fine, so no need to check the results here.
+      This is just to make sure these compile.
+    */
+    unsigned u[3];
+    u[0] = 17;
+    u[1] = 42;
+    u[2] = 2010;
+    bsearch<unsigned, unsigned, 0>(&u[1], u, 3, compare<unsigned>);
+    bsearch<unsigned int, unsigned int, 0>(&u[1], u, 3);
+
+    unsigned long ul[3];
+    ul[0] = 17;
+    ul[1] = 42;
+    ul[2] = 2010;
+    bsearch<unsigned long, unsigned long, 0>(&ul[1], ul, 3);
+
+    const char *const ps[3] = {"alpha", "bravo", "charlie"};
+    bsearch<charstar, charstar, 0>(&ps[2], ps, 3);
 
     return 0;
 }

@@ -21,24 +21,14 @@
 namespace phoenix4cpp
 {
 
-#define PHOENIX4CPP_COMPARE_FUNC(type, typeToken) \
-int compare##typeToken(const type *pl, const type *pr) \
-{ \
-    if (*pl < *pr) \
-	return -1; \
-    if (*pl == *pr) \
-	return 0; \
-\
-    return 1; \
+template<>
+int compare<char>(const char *pl, const char *pr)
+{
+    return strcmp(pl, pr);
 }
 
-PHOENIX4CPP_COMPARE_FUNC(int, Int)
-PHOENIX4CPP_COMPARE_FUNC(unsigned, Unsigned)
-PHOENIX4CPP_COMPARE_FUNC(long, Long)
-PHOENIX4CPP_COMPARE_FUNC(unsigned long, UnsignedLong)
-PHOENIX4CPP_COMPARE_FUNC(double, Double)
-
-int compareCharStar(const char **pl, const char **pr)
+template<>
+int compare<charstar>(const charstar *pl, const charstar *pr)
 {
     return strcmp(*pl, *pr);
 }

@@ -44,31 +44,37 @@ static bool sortCheck(const void *pA, size_t n, size_t size, size_t keyOffset,
     return true;
 }
 
+static int compareInt(const void *pl, const void *pr)
+{
+    return compare<int>((const int *)pl, (const int *)pr);
+}
+
 static bool testOnce()
 {
 #define A_SIZE 256
     Foo a[A_SIZE + 1];
     Foo b[A_SIZE + 1];
+    Foo c[A_SIZE + 1];
     const size_t n = (rand() % A_SIZE) + 1;
 
     /* populate the arrays */
     for(size_t i = 0; i < n; ++i)
     {
 	a[i].value = rand() % (A_SIZE / 2);
-	b[i].value = a[i].value;
+	c[i].value = b[i].value = a[i].value;
     }
     
     /* sort the arrays */
-    qsort(a, n, sizeof(Foo), offsetof(Foo, value),
-	  (int (*)(const void *, const void *))compareInt);
-    qsort<Foo, int, offsetof(Foo, value)>(b, n, compareInt);
+    qsort(a, n, sizeof(Foo), offsetof(Foo, value), compareInt);
+    qsort<Foo, int, offsetof(Foo, value)>(b, n, compare<int>);
+    qsort<Foo, int, offsetof(Foo, value)>(c, n);
 
     /* check that the arrays are sorted */
-    if (!sortCheck(a, n, sizeof(Foo), offsetof(Foo, value),
-		   (int (*)(const void *, const void *))compareInt))
+    if (!sortCheck(a, n, sizeof(Foo), offsetof(Foo, value), compareInt))
 	return false;
-    if (!sortCheck(b, n, sizeof(Foo), offsetof(Foo, value),
-		   (int (*)(const void *, const void *))compareInt))
+    if (!sortCheck(b, n, sizeof(Foo), offsetof(Foo, value), compareInt))
+	return false;
+    if (!sortCheck(c, n, sizeof(Foo), offsetof(Foo, value), compareInt))
 	return false;
 
     return true;

@@ -17,6 +17,8 @@
 
 #include <cstddef>
 
+#include <compare.h>
+
 namespace phoenix4cpp
 {
 
@@ -73,7 +75,7 @@ void *bsearch(const void *pKey, const void *pArray, size_t n, size_t size,
 */
 template<class T, class K, size_t keyOffset>
 const T *bsearch(const K *pKey, const T *pArray, size_t n,
-		 int (*cmp)(const K *pk1, const K *pk2));
+		 int (*cmp)(const K *pk1, const K *pk2) = compare<K>);
 
 } // namespace phoenix4cpp
 
@@ -82,6 +84,7 @@ const T *bsearch(const K *pKey, const T *pArray, size_t n,
 
 namespace phoenix4cpp
 {
+
 template<class T, class K, size_t keyOffset>
 inline const T *bsearch(const K *pKey, const T *pArray, size_t n,
 			int (*cmp)(const K *pl, const K *pr))
