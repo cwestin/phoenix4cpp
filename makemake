@@ -52,8 +52,8 @@ def writeobjdeps(makefilefd, filebase):
     # the test file depends on the test source file and library
     testsrc = 'testsrc/test%s.cpp' % filebase
     if (os.path.isfile(testsrc)):
-        makefilefd.write('test/test%s:\ttestsrc/test%s.cpp lib/$(LIBRARY)\n' %
-                         (filebase, filebase))
+        makefilefd.write('test/test%s:\ttestsrc/test%s.cpp obj/%s.o lib/$(LIBRARY)\n' %
+                         (filebase, filebase, filebase))
         makefilefd.write('\t$(CC) $(CFLAGS) -o $@ testsrc/test%s.cpp -Wl,-l:lib/$(LIBRARY)\n' % filebase)
         makefilefd.write('\n')
 
@@ -108,7 +108,7 @@ def visitsrcdir(makefilefd):
     makefilefd.write('TESTS =')
     for srcbase in filebases:
         if (os.path.isfile('testsrc/test%s.cpp' % srcbase)):
-            makefilefd.write(' test/test%s\n' % srcbase)
+            makefilefd.write(' test/test%s' % srcbase)
             testcounter = testcounter + 1
     makefilefd.write('\n')
     makefilefd.write('\n')
@@ -126,7 +126,7 @@ def visitsrcdir(makefilefd):
             if (not os.path.isfile('testsrc/test%s.cpp' % srcbase)):
                 continue
             makefilefd.write('\ttest/test%s\n' % srcbase)
-            makefilefd.write('\n')
+        makefilefd.write('\n')
 
 
 

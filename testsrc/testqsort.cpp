@@ -1,7 +1,7 @@
 /* Copyright (c) 2011 Chris Westin.  All Rights Reserved. */
 /*
   NAME
-    testbsearch.cpp - test bsearch.h
+    testqsort.cpp - test qsort.h
 
   SOURCE
     phoenix4cpp - https://github.com/cwestin/phoenix4cpp
@@ -14,10 +14,10 @@
 
 #include <cassert>
 #include <cstddef>
-#include <cstdlib>
 #include <cstdio>
+#include <cstdlib>
 
-#include "bsearch.h"
+#include "qsort.h"
 #include "compare.h"
 
 using namespace phoenix4cpp;
@@ -28,40 +28,48 @@ struct Foo
     int value;
 };
 
-static int cmpFoo(const void *pl, const void *pr)
+static bool sortCheck(const void *pA, size_t n, size_t size, size_t keyOffset,
+		      int (*cmp)(const void *pl, const void *pr))
 {
-    if (((const Foo *)pl)->value < ((const Foo *)pr)->value)
-	return -1;
-    if (((const Foo *)pl)->value == ((const Foo *)pr)->value)
-	return 0;
-    return 1;
+    const char *pLast = ((const char *)pA) + keyOffset;
+    const char *pNext;
+    for(size_t i = n - 1; i; pLast = pNext, --i)
+    {
+	pNext = pLast + size;
+	int cmpval = (*cmp)(pLast, pNext);
+	if (cmpval > 0)
+	    return false;
+    }
+
+    return true;
 }
 
 static bool testOnce()
 {
 #define A_SIZE 256
     Foo a[A_SIZE + 1];
+    Foo b[A_SIZE + 1];
     const size_t n = (rand() % A_SIZE) + 1;
-    size_t i;
 
-    /* populate the array */
-    for(i = 0; i < n; ++i)
-	a[i].value = rand() % (A_SIZE / 2);
-    
-    /* sort the array */
-    qsort(a, n, sizeof(Foo), cmpFoo);
-
-    /* search for every element in the array */
-    for(i = 0; i < n; ++i)
+    /* populate the arrays */
+    for(size_t i = 0; i < n; ++i)
     {
-	const Foo *pFound =
-	    bsearch<Foo, int, offsetof(Foo, value)>(&(a[i].value), a,
-						    n, compareInt);
-	if (!pFound)
-	    return false;
-	if (pFound->value != a[i].value)
-	    return false;
+	a[i].value = rand() % (A_SIZE / 2);
+	b[i].value = a[i].value;
     }
+    
+    /* sort the arrays */
+    qsort(a, n, sizeof(Foo), offsetof(Foo, value),
+	  (int (*)(const void *, const void *))compareInt);
+    qsort<Foo, int, offsetof(Foo, value)>(b, n, compareInt);
+
+    /* check that the arrays are sorted */
+    if (!sortCheck(a, n, sizeof(Foo), offsetof(Foo, value),
+		   (int (*)(const void *, const void *))compareInt))
+	return false;
+    if (!sortCheck(b, n, sizeof(Foo), offsetof(Foo, value),
+		   (int (*)(const void *, const void *))compareInt))
+	return false;
 
     return true;
 }
@@ -88,7 +96,8 @@ int main()
     {
 	if (!testOnce())
 	{
-	    fprintf(stderr, "%s failure iteration %u\n", __FILE__, i);
+	    fprintf(stdout, "%s failure iteration %u\n", __FILE__, i);
+	    fflush(stdout);
 	    exit(1);
 	}
     }

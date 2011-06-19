@@ -20,23 +20,23 @@
 namespace phoenix4cpp
 {
 
-void *bsearch(const void *pkey, const void *pbase, size_t n, size_t size,      
-	      size_t keyoffset, int (*cmp)(const void *pl, const void *pr))
+void *bsearch(const void *pKey, const void *pArray, size_t n, size_t size,      
+	      size_t keyOffset, int (*cmp)(const void *pl, const void *pr))
 {
     size_t mid;       /* the middle array element's index */
-    const char *pmid; /* a pointer to the middle array element */
+    const char *pMid; /* a pointer to the middle array element */
     int cmpval;   /* the result of comparing the middle element with the key */
 
     /* keep dividing the array in half until we find a matching item */
     while(n)
     {
 	mid = n / 2;
-	pmid = ((const char *)pbase) + mid * size;
-	cmpval = (*cmp)(pkey, (const void *)(pmid + keyoffset));
+	pMid = ((const char *)pArray) + mid * size;
+	cmpval = (*cmp)(pKey, (const void *)(pMid + keyOffset));
 
 	/* do a three way comparison */
 	if (!cmpval)
-	    return (void *)pmid;  /* we found a match */
+	    return (void *)pMid;  /* we found a match */
 	if (cmpval < 0)
 	    n = mid;  /* search an array one smaller than half size */
 	else
@@ -46,7 +46,7 @@ void *bsearch(const void *pkey, const void *pbase, size_t n, size_t size,
 	      element after the midpoint.
 	    */ 
 	    n -= mid + 1;
-	    pbase = pmid + size;
+	    pArray = pMid + size;
 	}
     }
 
