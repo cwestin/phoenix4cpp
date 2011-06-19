@@ -34,7 +34,7 @@ int compare##typeToken(const type *pl, const type *pr) \
 
 PHOENIX4CPP_COMPARE_FUNC(int, Int)
 PHOENIX4CPP_COMPARE_FUNC(unsigned, Unsigned)
-PHOENIX4CPP_COMPARE_FUNC(long, Lnt)
+PHOENIX4CPP_COMPARE_FUNC(long, Long)
 PHOENIX4CPP_COMPARE_FUNC(unsigned long, UnsignedLong)
 PHOENIX4CPP_COMPARE_FUNC(double, Double)
 
