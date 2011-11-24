@@ -14,7 +14,7 @@ import os
 import os.path
 import re
 
-# keep around some compiled regular expressions we're use repeatedly
+# keep around some compiled regular expressions we use repeatedly
 filebasere = re.compile('(?P<filebase>.*)\\.cpp$')
 includere = re.compile('^#\\s*include\\s*"(?P<incfile>.*)"')
 
@@ -141,7 +141,7 @@ if __name__ == '__main__':
     makefilefd.write('\n')
     makefilefd.write('CC = g++\n')
     makefilefd.write('INCLUDE = %s/include/\n' % cwd)
-    makefilefd.write('CFLAGS = -Wall -I$(INCLUDE) -ggdb\n')
+    makefilefd.write('CFLAGS = -Wall -Wno-invalid-offsetof -I$(INCLUDE) -ggdb\n')
     makefilefd.write('\n')
 
     makefilefd.write('AR = ar\n')

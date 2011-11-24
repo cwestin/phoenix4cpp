@@ -15,9 +15,15 @@
 #ifndef PHOENIX4CPP_QSORT_H
 #define PHOENIX4CPP_QSORT_H
 
+#ifndef PHOENIX4CPP_CSTDDEF_H
 #include <cstddef>
+#define PHOENIX4CPP_CSTDDEF_H
+#endif
 
+#ifndef PHOENIX4CPP_COMPARE_H
 #include "compare.h"
+#endif
+
 
 namespace phoenix4cpp
 {

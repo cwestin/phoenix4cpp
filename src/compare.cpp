@@ -14,9 +14,15 @@
     again, a macro is used to define the implementations for the scalar types.
  */
 
+#ifndef PHOENIX4CPP_COMPARE_H
 #include "compare.h"
+#endif
 
+#ifndef PHOENIX4CPP_CSTRING_H
 #include <cstring>
+#define PHOENIX4CPP_CSTRING_H
+#endif
+
 
 namespace phoenix4cpp
 {

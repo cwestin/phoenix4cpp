@@ -15,7 +15,10 @@
     immediately if we get back a zero.
  */
 
+#ifndef PHOENIX4CPP_BSEARCH_H
 #include "bsearch.h"
+#endif
+
 
 namespace phoenix4cpp
 {

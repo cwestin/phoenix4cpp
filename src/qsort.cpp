@@ -21,7 +21,9 @@
     on pointers.
  */
 
+#ifndef PHOENIX4CPP_QSORT_H
 #include "qsort.h"
+#endif
 
 
 namespace phoenix4cpp
