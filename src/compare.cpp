@@ -10,8 +10,6 @@
     See ../LICENSE.txt.
 
   IMPLEMENTATION
-    In order to avoid typing the text of the scalar comparisons over and over
-    again, a macro is used to define the implementations for the scalar types.
  */
 
 #ifndef PHOENIX4CPP_COMPARE_H
