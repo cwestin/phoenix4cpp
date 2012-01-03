@@ -31,22 +31,21 @@ namespace phoenix4cpp
 
     void HashValue::blend(short v)
     {
-	rotate();
-	value ^= byteTable[v & 0xff];
-	rotate();
-	value ^= byteTable[(v >> 8) & 0xff];
+	blend((const void *)&v, sizeof(v));
     }
 
     void HashValue::blend(unsigned long v)
     {
-	rotate();
-	value ^= byteTable[v & 0xff];
-	rotate();
-	value ^= byteTable[(v >> 8) & 0xff];
-	rotate();
-	value ^= byteTable[(v >> 16) & 0xff];
-	rotate();
-	value ^= byteTable[(v >> 24) & 0xff];
+	blend((const void *)&v, sizeof(v));
+    }
+
+    void HashValue::blend(const void *p, size_t length)
+    {
+	for(const char *pC = (const char *)p; length; ++pC, --length)
+	{
+	    rotate();
+	    value ^= byteTable[(unsigned)*pC];
+	}
     }
 
     void HashValue::blend(const char *pS)

@@ -11,7 +11,10 @@
     See ../LICENSE.txt.
 
   NOTES
-    Templated functions are used to cover scalars.
+    One of the goals of this library is to only use templating in a way that
+    is analogous to type erasure in Java.  This assumes that all pointers
+    are the same size, and can at least go through a conversion to (void *)
+    and back.
  */
 
 #pragma once
@@ -22,69 +25,21 @@
 namespace phoenix4cpp
 {
 
-/*
-  compare<> - compare two values
-
-  Template specializations below cover compare<char> as an embedded string, and
-  compare<charstar> as a pointer to a string.
+/**
+  Compare two values and return a value less than zero, equal to zero,
+  or greater than zero if the left value is less than the right, equal to
+  the right, or greater than the right, respectively.
 
   @param pl pointer to left value
   @param pr pointer to right value
   @returns a value less than zero if (*pl < *pr), zero if (*pl == *pr), and
     greater than zero if (*pl > *pr).
  */
-template<class T>
-int compare(const T *pl, const T *pr)
-{
-    if (*pl < *pr)
-	return -1;
-    if (*pl == *pr)
-	return 0;
+int compareCharArray(const char *pl, const char *pr);
+int compareCharStar(const char *const *ppl, const char *const *ppr);
+int compareUnsigned(const unsigned *pl, const unsigned *pr);
+int compareUnsignedLong(const unsigned long *pl, const unsigned long *pr);
 
-    return 1;
-}
-
-/*
-  compareReverse<> - compare two values, reversed
-
-  Same as compare<>, but useful for situations where items are sorted in a
-  descending order.
-
-  @param pl pointer to left value
-  @param pr pointer to right value
-  @returns a value greater than zero if (*pl < *pr), zero if (*pl == *pr), and
-    less than zero if (*pl > *pr).
-*/
-template<class T>
-int compareReverse(const T *pl, const T *pr)
-{
-    return -1*compare<T>(pl, pr);
-}
-
-
-/* --------------------- template specializations -------------------------- */
-
-template<>
-int compare<char>(const char *pl, const char *pr);
-
-#ifdef NEVER
-/*
-  Unfortunately, this template specialization doesn't match as you would
-  expect, so we have to use the typedef for the one below for pointers to
-  strings.
- */
-template<>
-int compare<char *>(const char **pl, const char **pr)
-{
-    return strcmp(*pl, *pr);
-}
-#endif
-
-
-typedef const char *charstar;
-
-template<>
-int compare<charstar>(const charstar *pl, const charstar *pr);
 
 } // namespace phoenix4cpp
 

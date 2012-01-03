@@ -20,10 +20,6 @@
 #define PHOENIX4CPP_CSTDDEF_H
 #endif
 
-#ifndef PHOENIX4CPP_COMPARE_H
-#include "compare.h"
-#endif
-
 
 namespace phoenix4cpp
 {
@@ -81,7 +77,7 @@ void *bsearch(const void *pKey, const void *pArray, size_t n, size_t size,
 */
 template<class T, class K, size_t keyOffset>
 const T *bsearch(const K *pKey, const T *pArray, size_t n,
-		 int (*cmp)(const K *pk1, const K *pk2) = compare<K>);
+		 int (*cmp)(const K *pk1, const K *pk2));
 
 } // namespace phoenix4cpp
 

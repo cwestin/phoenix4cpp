@@ -23,6 +23,11 @@
 #ifndef PHOENIX4CPP_HASHVALUE_H
 #define PHOENIX4CPP_HASHVALUE_H
 
+#ifndef PHOENIX4CPP_CSTDLIB_H
+#include <cstdlib>
+#define PHOENIX4CPP_CSTDLIB_H
+#endif
+
 namespace phoenix4cpp
 {
 
@@ -33,7 +38,7 @@ namespace phoenix4cpp
 
 	unsigned long get() const;
 
-	/*
+	/**
 	  Blend the given value into the accumulated hash value.
 
 	  @param v the value to blend in
@@ -41,12 +46,20 @@ namespace phoenix4cpp
 	void blend(short v);
 	void blend(unsigned long v);
 
-	/*
+	/**
 	  Blend the string into the accumulated hash value.
 
 	  @param pS pointer to the null-terminated string to blend in
 	 */
 	void blend(const char *pS);
+
+	/**
+	  Blend the given bytes into the accumulated hash value.
+
+	  @param p pointer to the value to blend in
+	  @param length length of the byte string to blend in
+	 */
+	void blend(const void *p, size_t length);
 
     private:
 	static const unsigned long byteTable[256];
@@ -57,6 +70,7 @@ namespace phoenix4cpp
     };
 
 }
+
 
 /* ========================== PRIVATE IMPLEMENTATION ======================== */
 

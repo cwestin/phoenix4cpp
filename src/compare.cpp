@@ -25,16 +25,32 @@
 namespace phoenix4cpp
 {
 
-template<>
-int compare<char>(const char *pl, const char *pr)
+int compareCharArray(const char *pl, const char *pr)
 {
     return strcmp(pl, pr);
 }
 
-template<>
-int compare<charstar>(const charstar *pl, const charstar *pr)
+int compareCharStar(const char *const *ppl, const char *const *ppr)
 {
-    return strcmp(*pl, *pr);
+    return strcmp(*ppl, *ppr);
+}
+
+int compareUnsigned(const unsigned *pl, const unsigned *pr)
+{
+    if (*pl < *pr)
+	return -1;
+    if (*pl > *pr)
+	return 1;
+    return 0;
+}
+
+int compareUnsignedLong(const unsigned long *pl, const unsigned long *pr)
+{
+    if (*pl < *pr)
+	return -1;
+    if (*pl > *pr)
+	return 1;
+    return 0;
 }
 
 } // namespace phoenix4cpp
