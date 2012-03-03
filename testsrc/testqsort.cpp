@@ -44,9 +44,9 @@ static bool sortCheck(const void *pA, size_t n, size_t size, size_t keyOffset,
     return true;
 }
 
-static int compareInt(const void *pl, const void *pr)
+static int compareIntUntyped(const void *pl, const void *pr)
 {
-    return compare<int>((const int *)pl, (const int *)pr);
+    return compareInt((const int *)pl, (const int *)pr);
 }
 
 static bool testOnce()
@@ -65,16 +65,16 @@ static bool testOnce()
     }
     
     /* sort the arrays */
-    qsort(a, n, sizeof(Foo), offsetof(Foo, value), compareInt);
-    qsort<Foo, int, offsetof(Foo, value)>(b, n, compare<int>);
-    qsort<Foo, int, offsetof(Foo, value)>(c, n);
+    qsort(a, n, sizeof(Foo), offsetof(Foo, value), compareIntUntyped);
+    qsort<Foo, int, offsetof(Foo, value)>(b, n, compareInt);
+    qsort<Foo, int, offsetof(Foo, value)>(c, n, compareInt);
 
     /* check that the arrays are sorted */
-    if (!sortCheck(a, n, sizeof(Foo), offsetof(Foo, value), compareInt))
+    if (!sortCheck(a, n, sizeof(Foo), offsetof(Foo, value), compareIntUntyped))
 	return false;
-    if (!sortCheck(b, n, sizeof(Foo), offsetof(Foo, value), compareInt))
+    if (!sortCheck(b, n, sizeof(Foo), offsetof(Foo, value), compareIntUntyped))
 	return false;
-    if (!sortCheck(c, n, sizeof(Foo), offsetof(Foo, value), compareInt))
+    if (!sortCheck(c, n, sizeof(Foo), offsetof(Foo, value), compareIntUntyped))
 	return false;
 
     return true;

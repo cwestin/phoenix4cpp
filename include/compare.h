@@ -37,6 +37,7 @@ namespace phoenix4cpp
  */
 int compareCharArray(const char *pl, const char *pr);
 int compareCharStar(const char *const *ppl, const char *const *ppr);
+int compareInt(const int *pl, const int *pr);
 int compareUnsigned(const unsigned *pl, const unsigned *pr);
 int compareUnsignedLong(const unsigned long *pl, const unsigned long *pr);
 

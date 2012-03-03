@@ -25,19 +25,15 @@ int main()
 {
     const int five = 5;
     const int seven = 7;
-    assert(compare<int>(&five, &seven) < 0);
-    assert(compareReverse<int>(&five, &seven) > 0);
+    assert(compareInt(&five, &seven) < 0);
 
     const unsigned long twelve = 12;
     const unsigned long fifteen = 15;
-    assert(compare<unsigned long>(&fifteen, &twelve) > 0);
-    assert(compareReverse<unsigned long>(&fifteen, &twelve) < 0);
+    assert(compareUnsignedLong(&fifteen, &twelve) > 0);
 
     const char *pBfoo = "bfoo";
     const char *pBar = "bar";
-    //assert(compare<char *>(&pBfoo, &pBar) > 0);
-    assert(compare<charstar>(&pBfoo, &pBar) > 0);
-    assert(compareReverse<charstar>(&pBfoo, &pBar) < 0);
+    assert(compareCharStar(&pBfoo, &pBar) > 0);
 
     return 0;
 }

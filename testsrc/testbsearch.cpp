@@ -55,15 +55,16 @@ static bool testOnce()
     for(i = 0; i < n; ++i)
     {
 	const Foo *pFound =
-	    bsearch<Foo, int, offsetof(Foo, value)>(&(a[i].value), a,
-						    n, compare<int>);
+	    bsearch<Foo, int, offsetof(Foo, value)>(
+		&(a[i].value), a, n, compareInt);
 	if (!pFound)
 	    return false;
 	if (pFound->value != a[i].value)
 	    return false;
 
 	const Foo *pFound2 =
-	    bsearch<Foo, int, offsetof(Foo, value)>(&(a[i].value), a, n);
+	    bsearch<Foo, int, offsetof(Foo, value)>(
+		&(a[i].value), a, n, compareInt);
 	if (pFound2 != pFound)
 	    return false;
     }
@@ -107,17 +108,18 @@ int main()
     u[0] = 17;
     u[1] = 42;
     u[2] = 2010;
-    bsearch<unsigned, unsigned, 0>(&u[1], u, 3, compare<unsigned>);
-    bsearch<unsigned int, unsigned int, 0>(&u[1], u, 3);
+    bsearch<unsigned, unsigned, 0>(&u[1], u, 3, compareUnsigned);
 
     unsigned long ul[3];
     ul[0] = 17;
     ul[1] = 42;
     ul[2] = 2010;
-    bsearch<unsigned long, unsigned long, 0>(&ul[1], ul, 3);
+    bsearch<unsigned long, unsigned long, 0>(
+	&ul[1], ul, 3, compareUnsignedLong);
 
     const char *const ps[3] = {"alpha", "bravo", "charlie"};
-    bsearch<charstar, charstar, 0>(&ps[2], ps, 3);
+    bsearch<const char *, const char *const, 0>(
+	&ps[2], ps, 3, compareCharStar);
 
     return 0;
 }

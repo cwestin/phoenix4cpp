@@ -35,6 +35,15 @@ int compareCharStar(const char *const *ppl, const char *const *ppr)
     return strcmp(*ppl, *ppr);
 }
 
+int compareInt(const int *pl, const int *pr)
+{
+    if (*pl < *pr)
+	return -1;
+    if (*pl > *pr)
+	return 1;
+    return 0;
+}
+
 int compareUnsigned(const unsigned *pl, const unsigned *pr)
 {
     if (*pl < *pr)
